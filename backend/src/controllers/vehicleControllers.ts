@@ -49,24 +49,42 @@ export const vehicleSave = catchAsync(async (req:Request, res:Response, next:Nex
     } catch ( error:any ){
         const httpError = CreateHttpError(
             error.statusCode,
-            `[Error retrieving Vehicel detail] - [vehicle - ${req.params.vehicleIdentifier} - GET]: ${error.message}`
+            `[Error retrieving Vehicel Save] - [vehicle - ${req.params.vehicleIdentifier} - POST]: ${error.message}`
         )
         return next(httpError)
     }
 })
 
-export const docDelete = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
+export const vehicleDelete = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
     try{
-
-    } catch ( error ){
-
+        const vehicleIdentifier:string = req.params.vehicleIdentifier
+        await VEHICLE.findOneAndRemove({identifier:vehicleIdentifier})
+        endpointResponse({res,"code":200,"message":"¡ Vehiculo eliminado !"})
+    } catch ( error:any ){
+        const httpError = CreateHttpError(
+            error.statusCode,
+            `[Error retrieving Vehicel delete] - [vehicle - ${req.params.vehicleIdentifier} - DELETE]: ${error.message}`
+        )
+        return next(httpError)
     }
 })
 
-export const docUpdate = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
+export const vehicleUpdate = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
     try{
-
-    } catch ( error ){
-
+        const vehicle:vehicleInterface = {
+            "vehicleDescription":req.body.vehicleDescription,
+            "model":req.body.model,
+            "identifier":req.body.identifier,
+            "ownership":req.body.ownership,
+            "personInCharge":req.body.personInCharge,
+            "documents":req.body.documents
+        }
+        await VEHICLE.findOneAndUpdate({identifier:req.body.vehicleIdentifier},{vehicle})
+    } catch ( error:any ){
+        const httpError = CreateHttpError(
+            error.statusCode,
+            `[Error retrieving Vehicel update] - [vehicle - ${req.params.vehicleIdentifier} - PUT]: ${error.message}`
+        )
+        return next(httpError)
     }
 })
