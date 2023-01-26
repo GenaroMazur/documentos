@@ -1,10 +1,10 @@
 import { Router } from "express";
 const router = Router()
 
-import docsRouter from "./docs.routes"
+import vehicleRouter from "./vehicle.routes"
 import authRouter from "./auth.routes"
 
-router.use("/documents",docsRouter)
+router.use("/documents",vehicleRouter)
 router.use("/authorization",authRouter)
 
 
