@@ -7,7 +7,7 @@ const config = multer.diskStorage({
         callback(null, destiny)
     },
     filename(req, file, callback) {
-        callback(null, file.filename)
+        callback(null, Date.now()+"_"+file.originalname)
     },
 })
 

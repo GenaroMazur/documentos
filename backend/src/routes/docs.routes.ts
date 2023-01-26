@@ -4,10 +4,10 @@ import * as docs from "./../controllers/docsController"
 const router = Router()
 
 router.get("/",docs.docsList)
-router.post("/",upload.array("",10),docs.docUp)
+router.post("/",upload.array("pdf",10),docs.docUp)
 router.route("/:docName")
     .get(docs.docDetail)
     .delete(docs.docDelete)
-    .put(upload.single(""),docs.docUpdate)
+    .put(upload.single("pdf"),docs.docUpdate)
 
 export default router
