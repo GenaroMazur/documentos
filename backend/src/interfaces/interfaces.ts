@@ -17,3 +17,11 @@ export interface objectOfToken extends userInformation{
     username:string
     role:"USER"|"ADMIN"|"DRIVER"
 }
+
+export interface archive {
+    idVehicle:string,
+    document:string,
+    documentType:string,
+    expiredIn:string,
+    description?:string
+}
