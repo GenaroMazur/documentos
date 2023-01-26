@@ -4,14 +4,7 @@ import { docInterface } from "../interfaces/interfaces"
 
 export const uploadVehicleChain = [
     body("vehicleDescription")
-        .notEmpty().withMessage("Es necesario completar el campo 'fileName'").bail()
-        .custom(async(value,{req})=>{
-            if(await VEHICLE.findOne({vehicleDescription:value})!==null){
-                throw new Error("Ya existe un documento con ese nombre")
-            }else{
-                return true
-            }
-        }),
+        .notEmpty().withMessage("Es necesario completar el campo 'fileName'"),
     body("model")
         .notEmpty().withMessage("El campo 'model' no puede estar vacio").bail()
         .isString().withMessage("Debe ser una cadena de caracteres"),

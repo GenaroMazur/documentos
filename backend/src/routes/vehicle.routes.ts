@@ -4,10 +4,10 @@ import validationHandlerMiddleware from "../middlewares/validationHandlerMiddlew
 import { uploadVehicleChain } from "../middlewares/vehicleChainMiddleware";
 const router = Router()
 
-router.get("/", vehicleController.docsList)
-router.post("/", uploadVehicleChain, validationHandlerMiddleware, vehicleController.docUp)
+router.get("/", vehicleController.vehicleList)
+router.post("/", uploadVehicleChain, validationHandlerMiddleware, vehicleController.vehicleSave)
 router.route("/:vehicleIdentifier")
-    .get( vehicleController.docDetail)
+    .get( vehicleController.vehicleDetail)
     .delete( vehicleController.docDelete)
     .put( vehicleController.docUpdate)
 

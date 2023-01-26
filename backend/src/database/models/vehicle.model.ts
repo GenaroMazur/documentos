@@ -7,7 +7,7 @@ const VehicleDb = new Schema({
     identifier:{type:String, required:[true,"Es necesario guardar con un identificador"]},
     ownership:{type:String, required:[true,"Es necesario guardar el propietario"]},
     personInCharge:{type:String, require:[true, "es necesario guardar el responsable de la documentacion"]},
-    document:{type: Array<docInterface>, required:[true,"Es necesario guardar con datos"] },
+    documents:{type: Array<docInterface>, required:[true,"Es necesario guardar con datos"] },
     
 },{
     collection:"DOC_vehicle"
