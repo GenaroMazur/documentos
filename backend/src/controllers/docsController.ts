@@ -7,10 +7,21 @@ import { docInterface } from "../interfaces/interfaces";
 import { dateZoneString, dateNowTimestamp } from "../helpers/helper";
 
 export const docsExpiredList = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
-    let query:any = {"$lte":dateZoneString(dateNowTimestamp(), 'zu-ZA', 'America/Argentina/Cordoba').split(" ")[0]}
-    
+    let query:any = {
+        "$lte":dateZoneString(dateNowTimestamp(), 'zu-ZA', 'America/Argentina/Cordoba').split(" ")[0],
+        "$gte":dateZoneString(dateNowTimestamp()-60*60*24*30, 'zu-ZA', 'America/Argentina/Cordoba').split(" ")[0]
+    }
     if(req.query.afterTo!==undefined){
-        query = {"$gte":req.query.afterTo}
+        query.$gte=req.query.afterTo
+        if(req.query.beforeTo===undefined){
+            delete query.$lte
+        }
+    }
+    if(req.query.beforeTo!==undefined){
+        query.$lte=req.query.beforeTo
+        if(req.query.afterTo===undefined){
+            delete query.$gte
+        }
     }
     try {
         let ArrayOfDocs:Array<docInterface>=[]
