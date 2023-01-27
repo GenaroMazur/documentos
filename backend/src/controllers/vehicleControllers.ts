@@ -3,7 +3,7 @@ import { catchAsync } from "../helpers/catchAsync";
 import { endpointResponse } from "../helpers/succes";
 import CreateHttpError from "http-errors";
 import { VEHICLE } from "../database/models/vehicle.model";
-import { vehicleInterface } from "../interfaces/interfaces";
+import { docInterface, vehicleInterface } from "../interfaces/interfaces";
 
 export const vehicleList = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
     try{
@@ -42,7 +42,7 @@ export const vehicleSave = catchAsync(async (req:Request, res:Response, next:Nex
             "identifier":req.body.identifier,
             "ownership":req.body.ownership,
             "personInCharge":req.body.personInCharge,
-            "documents":req.body.documents || []
+            "documents":JSON.parse(req.body.documents) || []
         }
         await VEHICLE.create(vehicle)
         endpointResponse({res,"code":201,"message":"¡ vehiculo creado !","body":vehicle})
@@ -71,15 +71,17 @@ export const vehicleDelete = catchAsync(async (req:Request, res:Response, next:N
 
 export const vehicleUpdate = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
     try{
-        const vehicle:vehicleInterface = {
+        const vehicle:any = {
             "vehicleDescription":req.body.vehicleDescription,
             "model":req.body.model,
             "identifier":req.body.identifier,
             "ownership":req.body.ownership,
             "personInCharge":req.body.personInCharge,
-            "documents":req.body.documents
         }
-        await VEHICLE.findOneAndUpdate({identifier:req.body.vehicleIdentifier},{vehicle})
+        const documents:Array<docInterface>=JSON.parse(req.body.documents)
+        
+        await VEHICLE.findOneAndUpdate({identifier:vehicle.identifier},{...vehicle,$push:{"documents":{ $each:documents }}})
+        endpointResponse({res,"message":"¡ Se actualizo con exito !", "body":vehicle, code:201})
     } catch ( error:any ){
         const httpError = CreateHttpError(
             error.statusCode,
