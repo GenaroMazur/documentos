@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { docsExpiredList } from "../controllers/docsController";
+import { docsExpiredList, docsToCar } from "../controllers/docsController";
 import * as vehicleController from "../controllers/vehicleControllers"
 import validationHandlerMiddleware from "../middlewares/validationHandlerMiddleware";
 import { UpdateVehicle, uploadVehicleChain } from "../middlewares/vehicleChainMiddleware";
@@ -10,11 +10,10 @@ router.get("/docsExpirated",docsExpiredList)
 router.post("/", uploadVehicleChain, validationHandlerMiddleware, vehicleController.vehicleSave)
 router.route("/:vehicleIdentifier")
     .get( vehicleController.vehicleDetail)
-    .get( vehicleController.vehicleDetail)
     .delete( vehicleController.vehicleDelete)
     .put(UpdateVehicle, validationHandlerMiddleware, vehicleController.vehicleUpdate)
 router.route("/:vehicleIdentifier/documents")
-    .get()
+    .get(docsToCar)
     .post()
     .put()
     .delete()
