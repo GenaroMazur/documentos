@@ -92,7 +92,8 @@ export const upDocument = catchAsync(async (req: Request, res: Response, next: N
             "document": req.body.document,
             "documentType": req.body.documentType,
             "expiredIn": req.body.expiredIn,
-            "description": req.body.description
+            "description": req.body.description,
+            "lastUpdated":dateZoneString(dateNowTimestamp(), 'zu-ZA', 'America/Argentina/Cordoba').split(" ")[0]
         }
 
         await VEHICLE.findOneAndUpdate({ identifier: vehicleIdentifier }, { "$push": { "documents": document } })
@@ -132,7 +133,8 @@ export const updateDocById = catchAsync(async (req: Request, res: Response, next
             "documents.$.document": req.body.document,
             "documents.$.documentType": req.body.documentType,
             "documents.$.expiredIn": req.body.expiredIn,
-            "documents.$.description": req.body.description
+            "documents.$.description": req.body.description,
+            "documents.$.lastUpdated":dateZoneString(dateNowTimestamp(), 'zu-ZA', 'America/Argentina/Cordoba').split(" ")[0]
         }
 
         await VEHICLE.findOneAndUpdate({"documents._id":documentId},document)
@@ -157,6 +159,33 @@ export const deleteADocumentById = catchAsync(async (req: Request, res: Response
         const httpError = createHttpError(
             error.statusCode,
             `[Error retrieving vehicle delete a document] - [${vehicleIdentifier}/documents/${documentId} - DELETE]: ${error.message}`
+        )
+        return next(httpError)
+    }
+})
+
+export const allDocs = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+try{
+    const vehicles = await VEHICLE.find().select({documents:1,identifier:1})
+
+    let ArrayOfDocs = vehicles.map((object: any) => {
+        return object.documents.map((doc: any) => {
+            
+            doc.identifier = object.identifier
+            doc.document = undefined
+
+            return doc
+        }) 
+    })
+    
+    ArrayOfDocs=ArrayOfDocs.reduce((response: any, docs: any) => response.concat(docs))
+    endpointResponse({res, code:200, message:"List of all docs",body:ArrayOfDocs})
+} catch (error: any) {
+    console.log(error);
+    
+        const httpError = createHttpError(
+            error.statusCode,
+            `[Error retrieving list of All docs] - [/allDocs - GET]: ${error.message}`
         )
         return next(httpError)
     }

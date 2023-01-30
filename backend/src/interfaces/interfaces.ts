@@ -31,5 +31,6 @@ export interface docInterface {
     document:string,
     documentType:string,
     expiredIn:string,
+    lastUpdated:string
     description?:string
 }

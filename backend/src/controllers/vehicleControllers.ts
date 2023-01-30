@@ -3,7 +3,7 @@ import { catchAsync } from "../helpers/catchAsync";
 import { endpointResponse } from "../helpers/succes";
 import CreateHttpError from "http-errors";
 import { VEHICLE } from "../database/models/vehicle.model";
-import { docInterface, vehicleInterface } from "../interfaces/interfaces";
+import { vehicleInterface } from "../interfaces/interfaces";
 
 export const vehicleList = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
     try{
@@ -42,7 +42,7 @@ export const vehicleSave = catchAsync(async (req:Request, res:Response, next:Nex
             "identifier":req.body.identifier,
             "ownership":req.body.ownership,
             "personInCharge":req.body.personInCharge,
-            "documents":JSON.parse(req.body.documents) || []
+            "documents":[]
         }
         await VEHICLE.create(vehicle)
         endpointResponse({res,"code":201,"message":"¡ vehiculo creado !","body":vehicle})
@@ -78,9 +78,8 @@ export const vehicleUpdate = catchAsync(async (req:Request, res:Response, next:N
             "ownership":req.body.ownership,
             "personInCharge":req.body.personInCharge,
         }
-        const documents:Array<docInterface>=JSON.parse(req.body.documents)
         
-        await VEHICLE.findOneAndUpdate({identifier:vehicle.identifier},{...vehicle,$push:{"documents":{ $each:documents }}})
+        await VEHICLE.findOneAndUpdate({identifier:vehicle.identifier},vehicle)
         endpointResponse({res,"message":"¡ Se actualizo con exito !", "body":vehicle, code:201})
     } catch ( error:any ){
         const httpError = CreateHttpError(
