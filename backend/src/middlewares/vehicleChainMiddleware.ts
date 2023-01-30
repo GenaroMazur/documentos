@@ -1,5 +1,4 @@
-import { body, ErrorFormatter } from "express-validator"
-import { } from "mongoose"
+import { body } from "express-validator"
 import { VEHICLE } from "../database/models/vehicle.model"
 import { docInterface } from "../interfaces/interfaces"
 

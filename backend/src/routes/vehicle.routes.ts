@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { docsExpiredList, docsToCar, upDocument } from "../controllers/docsController";
+import { docById, docsExpiredList, docsToCar, upDocument } from "../controllers/docsController";
 import {vehicleDelete, vehicleList, vehicleDetail, vehicleSave, vehicleUpdate} from "../controllers/vehicleControllers"
+import { docChain } from "../middlewares/docsChainMiddleware";
 import roleValidationMiddleware from "../middlewares/roleValidationMiddleware";
 import validationHandlerMiddleware from "../middlewares/validationHandlerMiddleware";
 import { UpdateVehicle, uploadVehicleChain } from "../middlewares/vehicleChainMiddleware";
@@ -15,11 +16,11 @@ router.route("/:vehicleIdentifier")
     .put(roleValidationMiddleware("ADMIN"), UpdateVehicle, validationHandlerMiddleware, vehicleUpdate)
 router.route("/:vehicleIdentifier/documents")
     .get(docsToCar)
-    .post(roleValidationMiddleware("ADMIN"), upDocument)
+    .post(roleValidationMiddleware("ADMIN"), docChain, validationHandlerMiddleware, upDocument)
     .put(roleValidationMiddleware("ADMIN"), )
     .delete(roleValidationMiddleware("ADMIN"), )
 router.route("/:vehicleIdentifier/documents/:documentId")
-    .get()
+    .get(docById)
     .put(roleValidationMiddleware("ADMIN"), )
     .delete(roleValidationMiddleware("ADMIN"), )
     
