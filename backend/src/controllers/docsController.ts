@@ -111,17 +111,13 @@ export const docById = catchAsync(async (req: Request, res: Response, next: Next
     const documentId: string = req.params.documentId
     try {
 
-        // const vehicle = await VEHICLE.findOne({ identifier: vehicleIdentifier })
-        // if (vehicle === null) return endpointResponse({ res, code: 204, message: "¡ Vehiculo inexistente !" })
-        // const document = vehicle?.documents.find(doc => {
-        //     return doc.id === documentId
-        // })
-        const doc = await VEHICLE.findOneAndUpdate({"documents._id":documentId},{"documentType":"a"},{"documents.$":1})
+        const doc = (await VEHICLE.findOne({"documents._id":documentId},{"documents.$":1}))?.documents[0]
+
         endpointResponse({ res, code: 200, message: "¡ Documento encontrado !", body: doc })
     } catch (error: any) {
         const httpError = createHttpError(
             error.statusCode,
-            `[Error retrieving vehicle up document] - [${vehicleIdentifier}/documents - POST]: ${error.message}`
+            `[Error retrieving vehicle search a document] - [${vehicleIdentifier}/documents/${documentId} - PUT]: ${error.message}`
         )
         return next(httpError)
     }
@@ -132,18 +128,35 @@ export const updateDocById = catchAsync(async (req: Request, res: Response, next
     const documentId: string = req.params.documentId
     try {
 
-        const document: docInterface = {
-            "document": req.body.document,
-            "documentType": req.body.documentType,
-            "expiredIn": req.body.expiredIn,
-            "description": req.body.description
+        const document: any = {
+            "documents.$.document": req.body.document,
+            "documents.$.documentType": req.body.documentType,
+            "documents.$.expiredIn": req.body.expiredIn,
+            "documents.$.description": req.body.description
         }
 
-
+        await VEHICLE.findOneAndUpdate({"documents._id":documentId},document)
+        endpointResponse({res, message:"documento actualizado"})
     } catch (error: any) {
         const httpError = createHttpError(
             error.statusCode,
-            `[Error retrieving vehicle up document] - [${vehicleIdentifier}/documents - POST]: ${error.message}`
+            `[Error retrieving vehicle update document] - [${vehicleIdentifier}/documents/${documentId} - PUT]: ${error.message}`
+        )
+        return next(httpError)
+    }
+})
+
+export const deleteADocumentById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const vehicleIdentifier = req.params.vehicleIdentifier
+    const documentId: string = req.params.documentId
+    try{
+
+        await VEHICLE.findOneAndUpdate({"identifier":vehicleIdentifier},{"$pull":{"documents":{"_id":documentId}}})
+        endpointResponse({res,message:"Documento Eliminado"})
+    } catch (error: any) {
+        const httpError = createHttpError(
+            error.statusCode,
+            `[Error retrieving vehicle delete a document] - [${vehicleIdentifier}/documents/${documentId} - DELETE]: ${error.message}`
         )
         return next(httpError)
     }

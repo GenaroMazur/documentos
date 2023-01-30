@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { docById, docsExpiredList, docsToCar, upDocument } from "../controllers/docsController";
+import { deleteADocumentById, docById, docsExpiredList, docsToCar, updateDocById, upDocument } from "../controllers/docsController";
 import {vehicleDelete, vehicleList, vehicleDetail, vehicleSave, vehicleUpdate} from "../controllers/vehicleControllers"
 import { docChain } from "../middlewares/docsChainMiddleware";
 import roleValidationMiddleware from "../middlewares/roleValidationMiddleware";
@@ -21,7 +21,7 @@ router.route("/:vehicleIdentifier/documents")
     .delete(roleValidationMiddleware("ADMIN"), )
 router.route("/:vehicleIdentifier/documents/:documentId")
     .get(docById)
-    .put(roleValidationMiddleware("ADMIN"), )
-    .delete(roleValidationMiddleware("ADMIN"), )
+    .put(roleValidationMiddleware("ADMIN"), updateDocById)
+    .delete(roleValidationMiddleware("ADMIN"), deleteADocumentById)
     
 export default router
