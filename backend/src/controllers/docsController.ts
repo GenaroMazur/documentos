@@ -78,3 +78,25 @@ export const docsToCar = catchAsync(async (req:Request, res:Response, next:NextF
         return next(httpError)
     }
 })
+
+export const upDocument = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
+    const vehicleIdentifier = req.params.vehicleIdentifier
+    try {
+        
+        const document:docInterface={
+            "document":req.body.document,
+            "documentType":req.body.documentType,
+            "expiredIn":req.body.expiredIn,
+            "description":req.body.description
+        }
+        
+        await VEHICLE.findOneAndUpdate({identifier:vehicleIdentifier},{"$push":{"documents":document}})
+        endpointResponse({res,code:201,message:"¡ Documento agregado al vehiculo !", body:document})
+    } catch (error:any) {
+        const httpError = createHttpError(
+            error.statusCode,
+            `[Error retrieving vehicle up document] - [${vehicleIdentifier}/documents - POST]: ${error.message}`
+        )
+        return next(httpError)
+    }
+})

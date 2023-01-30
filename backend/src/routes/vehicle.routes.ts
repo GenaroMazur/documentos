@@ -1,21 +1,26 @@
 import { Router } from "express";
-import { docsExpiredList, docsToCar } from "../controllers/docsController";
-import * as vehicleController from "../controllers/vehicleControllers"
+import { docsExpiredList, docsToCar, upDocument } from "../controllers/docsController";
+import {vehicleDelete, vehicleList, vehicleDetail, vehicleSave, vehicleUpdate} from "../controllers/vehicleControllers"
+import roleValidationMiddleware from "../middlewares/roleValidationMiddleware";
 import validationHandlerMiddleware from "../middlewares/validationHandlerMiddleware";
 import { UpdateVehicle, uploadVehicleChain } from "../middlewares/vehicleChainMiddleware";
 const router = Router()
 
-router.get("/", vehicleController.vehicleList)
+router.get("/", vehicleList)
 router.get("/docsExpirated",docsExpiredList)
-router.post("/", uploadVehicleChain, validationHandlerMiddleware, vehicleController.vehicleSave)
+router.post("/",roleValidationMiddleware("ADMIN"), uploadVehicleChain, validationHandlerMiddleware, vehicleSave)
 router.route("/:vehicleIdentifier")
-    .get( vehicleController.vehicleDetail)
-    .delete( vehicleController.vehicleDelete)
-    .put(UpdateVehicle, validationHandlerMiddleware, vehicleController.vehicleUpdate)
+    .get( vehicleDetail)
+    .delete(roleValidationMiddleware("ADMIN") , vehicleDelete)
+    .put(roleValidationMiddleware("ADMIN"), UpdateVehicle, validationHandlerMiddleware, vehicleUpdate)
 router.route("/:vehicleIdentifier/documents")
     .get(docsToCar)
-    .post()
-    .put()
-    .delete()
-
+    .post(roleValidationMiddleware("ADMIN"), upDocument)
+    .put(roleValidationMiddleware("ADMIN"), )
+    .delete(roleValidationMiddleware("ADMIN"), )
+router.route("/:vehicleIdentifier/documents/:documentId")
+    .get()
+    .put(roleValidationMiddleware("ADMIN"), )
+    .delete(roleValidationMiddleware("ADMIN"), )
+    
 export default router
