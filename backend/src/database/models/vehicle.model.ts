@@ -8,7 +8,8 @@ const Document = new Schema({
     description:{type:String},
     documentType:{type:String, required:[true,"Es necesario especificar que tipo de documento es"]},
     lastUpdated:{type: String, required:[true, "Es necesario especificar cuando fue actualizado"]},
-    identifier:{type:String}
+    identifier:{type:String},
+    linkDetail:{type:String}
 })
 
 const VehicleDb = new Schema({

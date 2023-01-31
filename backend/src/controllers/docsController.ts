@@ -173,7 +173,7 @@ try{
             
             doc.identifier = object.identifier
             doc.document = undefined
-
+            doc.linkDetail = `/vehicles/${doc.identifier}/documents/${doc._id}`
             return doc
         }) 
     })

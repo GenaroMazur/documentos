@@ -7,6 +7,6 @@ import roleValidation from "../middlewares/roleValidationMiddleware";
 const router = Router()
 
 router.post("/login",loginChainValidator, validationHandler, auth.login)
-router.post("/register",roleValidation("ADMIN") , registerChainValidator, validationHandler, auth.register)
+router.post("/register", registerChainValidator, validationHandler, auth.register)
 
 export default router
