@@ -24,6 +24,10 @@ export const vehicleList = catchAsync(async (req:Request, res:Response, next:Nex
 export const vehicleDetail = catchAsync(async (req:Request, res:Response, next:NextFunction) => {
     try{
         const vehicle = await VEHICLE.findOne({identifier:req.params.vehicleIdentifier})
+        vehicle?.documents.map((doc:any)=>{
+            doc.document=undefined
+            return doc
+        })
         endpointResponse({res,"code":vehicle===null?204:200,"message":"¡Detalle de vehiculo!","body":vehicle})
     } catch ( error:any ){
         const httpError = CreateHttpError(
