@@ -34,27 +34,7 @@ exports.uploadVehicleChain = [
         .isString().withMessage("Debe ser una cadena de caracteres").bail(),
     (0, express_validator_1.body)("personInCharge")
         .notEmpty().withMessage("El campo 'personInCharge' no puede estar vacio").bail()
-        .isString().withMessage("Debe ser una cadena de caracteres"),
-    (0, express_validator_1.body)("documents")
-        .custom((value, { req }) => {
-        if (value === undefined || value.length === 0)
-            return true;
-        try {
-            const documents = JSON.parse(value);
-            const condition = documents.some(doc => {
-                return (doc.document === undefined || doc.documentType === undefined || doc.expiredIn === undefined);
-            });
-            if (condition) {
-                throw new Error("1");
-            }
-            else {
-                return true;
-            }
-        }
-        catch (error) {
-            throw new Error(error.message === "1" ? "El campo 'documents' debe tener los siguientes campos 'document', 'documentType', 'expiredIn' y 'description' (opcional) " : "El campo 'documents' debe ser un array con objetos validos");
-        }
-    })
+        .isString().withMessage("Debe ser una cadena de caracteres")
 ];
 exports.UpdateVehicle = [
     (0, express_validator_1.body)("_id")
@@ -84,25 +64,5 @@ exports.UpdateVehicle = [
         .isString().withMessage("Debe contener una cadena de caracteres"),
     (0, express_validator_1.body)("personInCharge")
         .notEmpty().withMessage("El campo 'personInCharge' no puede estar vacio").bail()
-        .isString().withMessage("Debe contener una cadena de caracteres"),
-    (0, express_validator_1.body)("documents").optional()
-        .custom((value, { req }) => {
-        if (value === undefined || value.length === 0)
-            return true;
-        try {
-            const documents = JSON.parse(value);
-            const condition = documents.some(doc => {
-                return (doc.document === undefined || doc.documentType === undefined || doc.expiredIn === undefined);
-            });
-            if (condition) {
-                throw new Error("1");
-            }
-            else {
-                return true;
-            }
-        }
-        catch (error) {
-            throw new Error(error.message === "1" ? "El campo 'documents' debe tener los siguientes campos 'document', 'documentType', 'expiredIn' y 'description' (opcional) " : "El campo 'documents' debe ser un array con objetos validos");
-        }
-    })
+        .isString().withMessage("Debe contener una cadena de caracteres")
 ];

@@ -38,8 +38,8 @@ class SERVER {
                     console.log(`=============== Servidor en \x1b[32mlinea\x1b[0m Puerto ${port} ===============`);
                 });
                 (0, mongoose_1.mongoosedb)(urlDb);
-                this.app.use(express_1.default.json());
-                this.app.use(express_1.default.urlencoded({ extended: false }));
+                this.app.use(express_1.default.json({ limit: "30mb" }));
+                this.app.use(express_1.default.urlencoded({ limit: "30mb", extended: true }));
                 this.app.use((0, cors_1.default)());
             }
             catch (error) {
