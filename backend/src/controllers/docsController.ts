@@ -72,10 +72,10 @@ export const docsToCar = catchAsync(async (req: Request, res: Response, next: Ne
                 })
             }
 
-            docs.map((doc: any) => {
-                doc.document = undefined
-                return doc
-            })
+            // docs.map((doc: any) => {
+            //     doc.document = undefined
+            //     return doc
+            // })
         }
         endpointResponse({ res, code: docs.length === 0 ? 204 : 200, message, body: docs })
     } catch (error: any) {

@@ -79,10 +79,10 @@ exports.docsToCar = (0, catchAsync_1.catchAsync)((req, res, next) => __awaiter(v
                     return doc.expiredIn <= (0, helper_1.dateZoneString)((0, helper_1.dateNowTimestamp)(), 'zu-ZA', 'America/Argentina/Cordoba').split(" ")[0];
                 });
             }
-            docs.map((doc) => {
-                doc.document = undefined;
-                return doc;
-            });
+            // docs.map((doc: any) => {
+            //     doc.document = undefined
+            //     return doc
+            // })
         }
         (0, succes_1.endpointResponse)({ res, code: docs.length === 0 ? 204 : 200, message, body: docs });
     }
